@@ -20,10 +20,12 @@ TWITTER_ACCESS_TOKEN_KEY    = 'xxxx'
 TWITTER_ACCESS_TOKEN_SECRET = 'xxxx'
 ```
 
-## Spider example
+## Spider examples
+
+
+### User Timeline
 
 This spider get all tweets of a user timeline, iterating with max_id while there are remaining tweets.
-
 
     scrapy crawl user-timeline -a screen_name=zachbraff -o zb_tweets.json
 
@@ -59,4 +61,33 @@ class UserTimelineSpider(scrapy.Spider):
                     screen_name = self.screen_name, 
                     count = self.count,
                     max_id = tweets[-1].id - 1) 
+```
+
+### Streaming
+
+This spider plugs to the streaming API and triggers all tweets to the pipeline.
+
+    scrapy crawl stream-filter -a track=#starwars
+
+```python
+import scrapy
+
+from scrapy_twitter import TwitterStreamFilterRequest, to_item
+
+class StreamFilterSpider(scrapy.Spider):
+    name = "stream-filter"
+    allowed_domains = ["twitter.com"]
+
+    def __init__(self, track = None, *args, **kwargs):
+        if not track:
+            raise scrapy.exceptions.CloseSpider('Argument track not set.')
+        super(StreamFilterSpider, self).__init__(*args, **kwargs)
+        self.track = track
+
+    def start_requests(self):
+        return [ TwitterStreamFilterRequest(track = self.track) ]
+
+    def parse(self, response):
+        for tweet in response.tweets:
+            yield to_item(tweet)
 ```

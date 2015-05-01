@@ -20,7 +20,7 @@ class TwitterUserTimelineRequest(Request):
 class TwitterStreamFilterRequest(Request):
     
     def __init__(self, *args, **kwargs):
-    	self.screen_name = kwargs.pop('track', None)
+    	self.track = kwargs.pop('track', None)
         super(TwitterStreamFilterRequest, self).__init__('http://twitter.com', dont_filter = True, **kwargs)
 
 
@@ -52,12 +52,17 @@ class TwitterDownloaderMiddleware(object):
 	    return cls(crawler.settings)
 
 	def process_request(self, request, spider):
-		tweets = self.api.GetUserTimeline(
-						screen_name=request.screen_name,
-						count=request.count,
-						max_id=request.max_id)
 
-		return TwitterResponse(tweets = tweets)
+		if isinstance(request, TwitterUserTimelineRequest):
+			tweets = self.api.GetUserTimeline(
+							screen_name=request.screen_name,
+							count=request.count,
+							max_id=request.max_id)
+			return TwitterResponse(tweets = [ tweet.AsDict() for tweet in tweets ])
+		
+		if isinstance(request, TwitterStreamFilterRequest):
+			tweets = self.api.GetStreamFilter(track = request.track)
+			return TwitterResponse(tweets = tweets)
 
 	def process_response(self, request, response, spider):
 		return response
@@ -69,8 +74,7 @@ from scrapy.item import DictItem, Field
 Utility methods
 """
 
-def to_item(tweet):
-	dict_tweet = tweet.AsDict()
+def to_item(dict_tweet):
 	field_list = dict_tweet.keys()
 	fields = {field_name: Field() for field_name in field_list}
 	item_class = type('TweetItem', (DictItem,), {'fields': fields})
