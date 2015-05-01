@@ -6,7 +6,7 @@ A lightweight wrapper over python-twitter library to use it in scrapy projects.
 
 Install
 
-    pip install -e git+git@github.com:yall/scrapy-twitter.git#egg=scrapy_twitter
+    sudo pip install -e git+https://github.com/yall/scrapy-twitter.git#egg=scrapy_twitter
 
 Set your API credentials and add TwitterDownloaderMiddleware in your scrapy project settings
 
