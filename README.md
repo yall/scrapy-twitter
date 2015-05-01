@@ -8,7 +8,7 @@ Set your API credentials and add TwitterDownloaderMiddleware in your scrapy proj
 
 ```python
 DOWNLOADER_MIDDLEWARES = { 
-    'twitter_api.middlewares.TwitterApiDownloaderMiddleware': 10,
+    'scrapy_twitter.TwitterApiDownloaderMiddleware': 10,
 }
 TWITTER_CONSUMER_KEY        = 'xxxx'
 TWITTER_CONSUMER_SECRET     = 'xxxx'
