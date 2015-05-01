@@ -60,7 +60,7 @@ class UserTimelineSpider(scrapy.Spider):
             yield TwitterUserTimelineRequest(
                     screen_name = self.screen_name, 
                     count = self.count,
-                    max_id = tweets[-1].id - 1) 
+                    max_id = tweets[-1]['id'] - 1) 
 ```
 
 ### Streaming
