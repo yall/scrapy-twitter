@@ -4,6 +4,10 @@ A lightweight wrapper over python-twitter library to use it in scrapy projects.
 
 ## Usage
 
+Install
+
+    pip install -e git+git@github.com:yall/scrapy-twitter.git#egg=scrapy_twitter
+
 Set your API credentials and add TwitterDownloaderMiddleware in your scrapy project settings
 
 ```python
@@ -19,6 +23,7 @@ TWITTER_ACCESS_TOKEN_SECRET = 'xxxx'
 ## Spider example
 
 This spider get all tweets of a user timeline, iterating with max_id while there are remaining tweets.
+
 
     scrapy crawl user-timeline -a screen_name=zachbraff -o zb_tweets.json
 
