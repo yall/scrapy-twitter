@@ -82,7 +82,7 @@ class StreamFilterSpider(scrapy.Spider):
         if not track:
             raise scrapy.exceptions.CloseSpider('Argument track not set.')
         super(StreamFilterSpider, self).__init__(*args, **kwargs)
-        self.track = track
+        self.track = track.split(',')
 
     def start_requests(self):
         return [ TwitterStreamFilterRequest(track = self.track) ]
